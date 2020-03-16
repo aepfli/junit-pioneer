@@ -88,7 +88,6 @@ yamlValidator {
 }
 
 tasks {
-
     test {
         useJUnitPlatform()
         filter {
@@ -201,3 +200,12 @@ tasks.register<org.junitpioneer.gradle.TriggerTravisTask>("triggerSiteBuild") {
     apiToken = travisApiToken
     message = "Triggered by successful JUnit Pioneer build for %COMMIT"
 }
+
+
+
+tasks.register("printEnvs") {
+        val map: MutableMap<String, String>? = System.getenv()
+        for ((key, value) in map!!) {
+            println("$key: $value")
+        }
+    }
