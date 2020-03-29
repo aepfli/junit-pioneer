@@ -15,28 +15,28 @@ shipkit {
 }
 
 allprojects {
-   /*plugins.withId('org.shipkit.bintray') {
+   plugins.withId('org.shipkit.bintray') {
 
        bintray {
            user = System.getenv('BINTRAY_USER_NAME')
            key = System.getenv('BINTRAY_API_KEY')
 
            pkg {
-               userOrg = 'junit-pioneer' // https://bintray.com/junit-pioneer
-               repo = 'junit-pioneer'    // https://bintray.com/junit-pioneer/junit-pioneer
-               name = 'junit-pioneer'    // https://bintray.com/junit-pioneer/junit-pioneer/junit-pioneer
+               userOrg = 'aepfli' // https://bintray.com/junit-pioneer
+               repo = 'junit-pioneer-test'    // https://bintray.com/junit-pioneer/junit-pioneer
+               name = 'junit-pioneer-test'    // https://bintray.com/junit-pioneer/junit-pioneer/junit-pioneer
                licenses = ['EPL-2.0']
-               vcsUrl = 'https://github.com/junit-pioneer/junit-pioneer.git'
+               vcsUrl = 'https://github.com/aepfli/junit-pioneer.git'
                labels = ['testing', 'junit', 'extensions']
 
-               version {
+               /*version {
                    mavenCentralSync {
                        sync = true
                        user = System.getenv('NEXUS_TOKEN_USERNAME')
                        password = System.getenv('NEXUS_TOKEN_PASSWORD')
                    }
-               }
+               } */
            }
        }
-   }*/
+   }
 }
