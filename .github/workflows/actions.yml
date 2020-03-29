@@ -5,12 +5,12 @@ name: JUnit Pioneer
 
 on:
   push:
-    branches: '*'
+    branches: '**'
     tags-ignore: 
       - 'v*'
   # pull_request:
   #   branches: '*'
-  
+
 
 jobs:
   build:
