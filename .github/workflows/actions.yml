@@ -54,8 +54,8 @@ jobs:
         env:
           TRAVIS_BRANCH: ${{ github.ref }}
           GH_WRITE_TOKEN: ${{ secrets.GH_WRITE_TOKEN }}
-          BINTRAY_USER_NAME: "<fill this out>"
-          BINTRAY_API_KEY: "<fill this out>"
+          BINTRAY_USER_NAME: ${{ secrets.BINTRAY_USER_NAME }}
+          BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
           NEXUS_TOKEN_USERNAME: "<fill this out>"
           NEXUS_TOKEN_PASSWORD: "<fill this out>"
         with:
