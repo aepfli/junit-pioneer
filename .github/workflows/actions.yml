@@ -7,9 +7,9 @@ on:
   push:
     branches: '**'
     tags-ignore: 
-      - 'v*'
-  # pull_request:
-  #   branches: '*'
+      - 'v**'
+  pull_request:
+    branches: '*'
 
 
 jobs:
@@ -53,6 +53,11 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         env:
           TRAVIS_BRANCH: ${{ github.ref }}
+          GH_WRITE_TOKEN: ${{ secrets.GH_WRITE_TOKEN }}
+          BINTRAY_USER_NAME: "<fill this out>"
+          BINTRAY_API_KEY: "<fill this out>"
+          NEXUS_TOKEN_USERNAME: "<fill this out>"
+          NEXUS_TOKEN_PASSWORD: "<fill this out>"
         with:
           arguments: ciPerformRelease 
       
