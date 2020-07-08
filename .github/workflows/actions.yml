@@ -101,5 +101,5 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: current
-          arguments: --refresh-dependencies --stacktrace --scan clean build -PjunitVersion=${{ matrix.junit }}
+          arguments: --refresh-dependencies --stacktrace --scan clean build
           wrapper-cache-enabled: false
