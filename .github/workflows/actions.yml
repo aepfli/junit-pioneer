@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        junit: [5.0, 5.1, 5.2, 6.0, 6.1, 6.2]
+        junit: ['5.0', 5.1, 5.2, 6.0, 6.1, 6.2]
     name: build for JunitVersion 5.${{ matrix.junit }}
     steps:
       - name: Check out repo
@@ -76,5 +76,5 @@ jobs:
       - name: Gradle build
         uses: eskatos/gradle-command-action@v1
         with:
-          arguments: --refresh-dependencies --stacktrace --scan clean build -PjunitVersion="${{ matrix.junit }}"
+          arguments: --refresh-dependencies --stacktrace --scan clean build -PjunitVersion=${{ matrix.junit }}
           wrapper-cache-enabled: false
