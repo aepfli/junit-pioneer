@@ -14,13 +14,13 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: master
-      - name: Wait for build to succeed
-        uses: fountainhead/action-wait-for-check@v1.0.0
-        id: wait-for-build
+      - name: Wait on builds
+        uses: lewagon/wait-on-check-action@v0.1-beta.2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: buildOk
           ref: ${{ github.sha }}
+          check-name: buildOk
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 300
       - name: Fetch unshallow
         run: git fetch --prune --unshallow
       - name: Setup java

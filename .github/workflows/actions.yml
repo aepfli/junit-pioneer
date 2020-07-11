@@ -60,3 +60,6 @@ jobs:
   buildDone:
     name: buildOk
     depends-on: build
+    steps:
+      - name: buildOk
+        run: echo 'all builds passed'
