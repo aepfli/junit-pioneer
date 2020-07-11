@@ -13,15 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: 'master'
-      - name: Wait For Other Builds To Succeed
-        # This steps waits for all github actions builds to suceed, before continuing.
-        # Currently we only have our default action, so we can ensure, 
-        # that our codebase builds correctly
-        uses: jitterbit/await-check-suites@v1
+          ref: master
+    - name: Wait on builds
+        uses: lewagon/wait-on-check-action@v0.1-beta.2
         with:
-          appSlugFilter: 'github-actions'
-          timeoutSeconds: '300'
+          ref: master
+          check-name: JUnit Pioneer
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 300
       - name: Fetch unshallow
         run: git fetch --prune --unshallow
       - name: Setup java
