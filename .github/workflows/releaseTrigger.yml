@@ -20,6 +20,7 @@ jobs:
           appSlugFilter: 'github-actions'
           timeoutSeconds: '300'
       - uses: actions/checkout@v2
+        ref: 'master'
       - name: Setup java
         uses: actions/setup-java@v1
         with:
@@ -37,7 +38,7 @@ jobs:
           NEXUS_TOKEN_USERNAME: ${{ secrets.NEXUS_TOKEN_USERNAME }}
           NEXUS_TOKEN_PASSWORD: ${{ secrets.NEXUS_TOKEN_PASSWORD }}
         with:
-          arguments: ciPerformRelease
+          arguments: testRelease
       - name: Delete Tag
         if: ${{ always() }}
         run: git push --delete origin releaseTrigger
