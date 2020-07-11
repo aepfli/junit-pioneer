@@ -13,8 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: 'master'
-    - name: Wait on builds
+          ref: master
+      - name: Wait on builds
         uses: lewagon/wait-on-check-action@v0.1-beta.2
         with:
           ref: master
