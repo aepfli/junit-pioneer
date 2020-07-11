@@ -18,27 +18,27 @@ shipkit {
 allprojects {
     plugins.withId('org.shipkit.bintray') {
 
-//        bintray {
-//            user = System.getenv('BINTRAY_USER_NAME')
-//            key = System.getenv('BINTRAY_API_KEY')
-//
-//            pkg {
-//                userOrg = 'junit-pioneer' // https://bintray.com/junit-pioneer
-//                repo = 'junit-pioneer'    // https://bintray.com/junit-pioneer/junit-pioneer
-//                name = 'junit-pioneer'    // https://bintray.com/junit-pioneer/junit-pioneer/junit-pioneer
-//                licenses = ['EPL-2.0']
-//                vcsUrl = 'https://github.com/junit-pioneer/junit-pioneer.git'
-//                labels = ['testing', 'junit', 'extensions']
-//
-//                version {
-//                    mavenCentralSync {
-//                        sync = true
-//                        user = System.getenv('NEXUS_TOKEN_USERNAME')
-//                        password = System.getenv('NEXUS_TOKEN_PASSWORD')
-//                    }
-//                }
-//            }
-//        }
+        bintray {
+            user = System.getenv('BINTRAY_USER_NAME')
+            key = System.getenv('BINTRAY_API_KEY')
+
+            pkg {
+                userOrg = 'junit-pioneer' // https://bintray.com/junit-pioneer
+                repo = 'junit-pioneer'    // https://bintray.com/junit-pioneer/junit-pioneer
+                name = 'junit-pioneer'    // https://bintray.com/junit-pioneer/junit-pioneer/junit-pioneer
+                licenses = ['EPL-2.0']
+                vcsUrl = 'https://github.com/junit-pioneer/junit-pioneer.git'
+                labels = ['testing', 'junit', 'extensions']
+
+                version {
+                    mavenCentralSync {
+                        sync = true
+                        user = System.getenv('NEXUS_TOKEN_USERNAME')
+                        password = System.getenv('NEXUS_TOKEN_PASSWORD')
+                    }
+                }
+            }
+        }
     }
     /**
      * This block is needed, as there is a bug in shipkit and its usage with bintray plugin,
