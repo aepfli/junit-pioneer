@@ -8,6 +8,7 @@ on:
     branches: 'master'
     tags-ignore: 
       - 'v**'
+      - 'releaseTrigger'
   pull_request:
     branches: '*'
 
