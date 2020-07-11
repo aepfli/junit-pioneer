@@ -59,7 +59,8 @@ jobs:
 #        run: ./gradlew jacocoTestReport sonarqube --stacktrace -i
   buildDone:
     name: buildOk
-    depends-on: build
+    needs: build
+    runs-on: ubuntu-latest
     steps:
       - name: buildOk
         run: echo 'all builds passed'
