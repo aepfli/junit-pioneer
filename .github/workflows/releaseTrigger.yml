@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     name: releasing
     steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: 'master'
       - name: Wait For Other Builds To Succeed
         # This steps waits for all github actions builds to suceed, before continuing.
         # Currently we only have our default action, so we can ensure, 
@@ -19,9 +22,6 @@ jobs:
         with:
           appSlugFilter: 'github-actions'
           timeoutSeconds: '300'
-      - uses: actions/checkout@v2
-        with:
-          ref: 'master'
       - name: Fetch unshallow
         run: git fetch --prune --unshallow
       - name: Setup java
