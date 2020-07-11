@@ -100,6 +100,6 @@ jobs:
       - name: Gradle build
         uses: eskatos/gradle-command-action@v1
         with:
-          gradle-version: current
+          gradle-version: nightly
           arguments: --refresh-dependencies --stacktrace --scan clean build
           wrapper-cache-enabled: false
