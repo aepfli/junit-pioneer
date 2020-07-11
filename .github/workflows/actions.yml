@@ -18,39 +18,42 @@ jobs:
     strategy:
       matrix:
         # test against latest update of each major Java version, as well as specific updates of LTS versions:
-        java: [ 8, 11, 14 ]
-        os: [ubuntu, windows, macos]
+        # TODO reinstantiate build when needed
+#        java: [ 8, 11, 14 ]
+        java: [ 14 ]
+        os: [ubuntu]
+#        os: [ubuntu, windows, macos]
     name: Build on ${{ matrix.os }} with Java ${{ matrix.java }}
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
         # fetch unshallow to enable blame for Sonar
-      - name: Fetch unshallow
-        run: git fetch --prune --unshallow
-      - name: Setup java
-        uses: actions/setup-java@v1
-        with:
-          java-version: ${{ matrix.java }}
-      - name: Cache Gradle
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches/
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-gradle-
-      - name: Cache Sonar
-        uses: actions/cache@v2
-        if: matrix.java == '11' && matrix.os == 'ubuntu'
-        with:
-          path: ~/.sonar/cache/
-          key: ${{ runner.os }}-sonar
-      - name: Gradle build
-        uses: eskatos/gradle-command-action@v1
-        with:
-          arguments: --refresh-dependencies --stacktrace --scan clean build
-          wrapper-cache-enabled: false
-      - name: Sonarqube
-        if: matrix.java == '11' && matrix.os == 'ubuntu'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: "61ab2579215aa8a0024a2f9368fc1298fdecfd18"
-        run: ./gradlew jacocoTestReport sonarqube --stacktrace -i
+#      - name: Fetch unshallow
+#        run: git fetch --prune --unshallow
+#      - name: Setup java
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: ${{ matrix.java }}
+#      - name: Cache Gradle
+#        uses: actions/cache@v2
+#        with:
+#          path: ~/.gradle/caches/
+#          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+#          restore-keys: ${{ runner.os }}-gradle-
+#      - name: Cache Sonar
+#        uses: actions/cache@v2
+#        if: matrix.java == '11' && matrix.os == 'ubuntu'
+#        with:
+#          path: ~/.sonar/cache/
+#          key: ${{ runner.os }}-sonar
+#      - name: Gradle build
+#        uses: eskatos/gradle-command-action@v1
+#        with:
+#          arguments: --refresh-dependencies --stacktrace --scan clean build
+#          wrapper-cache-enabled: false
+#      - name: Sonarqube
+#        if: matrix.java == '11' && matrix.os == 'ubuntu'
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          SONAR_TOKEN: "61ab2579215aa8a0024a2f9368fc1298fdecfd18"
+#        run: ./gradlew jacocoTestReport sonarqube --stacktrace -i
