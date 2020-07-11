@@ -41,7 +41,7 @@ jobs:
           NEXUS_TOKEN_USERNAME: ${{ secrets.NEXUS_TOKEN_USERNAME }}
           NEXUS_TOKEN_PASSWORD: ${{ secrets.NEXUS_TOKEN_PASSWORD }}
         with:
-          arguments: testRelease
+          arguments: ciPerformRelease
       - name: Delete Tag
         if: ${{ always() }}
         run: git push --delete origin releaseTrigger
