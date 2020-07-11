@@ -18,7 +18,7 @@ jobs:
         uses: lewagon/wait-on-check-action@v0.1-beta.2
         with:
           ref: master
-          check-name: JUnit Pioneer
+          check-name: build
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 300
       - name: Fetch unshallow
