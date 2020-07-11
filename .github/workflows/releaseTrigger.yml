@@ -13,15 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: 'master'
-      - name: Wait For Other Builds To Succeed
-        # This steps waits for all github actions builds to suceed, before continuing.
-        # Currently we only have our default action, so we can ensure,
-        # that our codebase builds correctly
-        uses: jitterbit/await-check-suites@v1
+          ref: master
+      - name: Wait for build to succeed
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        id: wait-for-build
         with:
-          appSlugFilter: 'github-actions'
-          timeoutSeconds: '300'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: buildOk
+          ref: ${{ github.sha }}
       - name: Fetch unshallow
         run: git fetch --prune --unshallow
       - name: Setup java

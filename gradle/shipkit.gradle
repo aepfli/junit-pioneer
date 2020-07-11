@@ -3,7 +3,7 @@
 //     https://github.com/mockito/shipkit/blob/master/docs/getting-started.md
 //
 shipkit {
-    gitHub.repository = 'junit-pioneer/junit-pioneer' // https://github.com/junit-pioneer/junit-pioneer
+    gitHub.repository = 'aepfli/junit-pioneer' // https://github.com/junit-pioneer/junit-pioneer
     gitHub.readOnlyAuthToken = '584daca204258e2a397d0c029010732a994382dd'
     gitHub.writeAuthToken = System.getenv('GH_WRITE_TOKEN')
 
