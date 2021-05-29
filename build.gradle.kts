@@ -23,7 +23,7 @@ plugins.withType<JavaPlugin>().configureEach {
 group = "org.junit-pioneer"
 description = "JUnit 5 Extension Pack"
 
-val modularBuild = findProperty("modularBuild") != null;
+val modularBuild : Boolean by project;
 
 java {
 	if(modularBuild) {
