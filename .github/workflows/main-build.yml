@@ -7,9 +7,11 @@ on:
       - 'v**'
   pull_request:
     branches: '*'
+  repository_dispatch:
+    types: [merge-ready-command]
 
 jobs:
-  basic build:
+  basic:
     runs-on: ${{ matrix.os }}-latest
     timeout-minutes: 15
     strategy:
@@ -51,33 +53,31 @@ jobs:
           SONAR_TOKEN: "61ab2579215aa8a0024a2f9368fc1298fdecfd18"
         run: echo "sonar" #./gradlew jacocoTestReport sonarqube --stacktrace -i
 
-
-  "Maintainer execution is missing":
-    if: "!contains(github.event.pull_request.labels.*.name, 'readyToMerge')"
-    needs: "basic build"
+  maintainer-action-missing:
+    if: github.event.pull_request
+    runs-on: ubuntu-latest
+    name: "Maintainer Action is Missing before Merge"
+    needs: basic
     steps:
       - run: |
           echo "A Maintainer will execute this build as soon as it is ready to merge. This action is *NOT* failing due to an error on your side, it is just precaution."
+          exit 1
   
   full-featured:
-    if: contains(github.event.pull_request.labels.*.name, 'readyToMerge') || !github.event.pull_request
-    needs: "basic build"
+    if: "github.event.repository_dispatch.action == 'merge-ready-command' || !github.event.pull_request"
+    needs: basic
     runs-on: ${{ matrix.os }}-latest
     timeout-minutes: 15
     strategy:
       matrix:
-        # test against latest update of each major Java version, as well as specific updates of LTS versions:
         java: [ 11, 16 ]
-        os: [ubuntu, macos, windows]
-        modulare: [true, false]
         junit-version: [ '5.7.0', '5.7.1', '5.8.0-M1' ]
-    name: with Java ${{ matrix.java }} on ${{ matrix.os }}
+        modular: [true, false]
+        os: [ubuntu, macos, windows]
+    name: with Java ${{ matrix.java }}, JUnit ${{ matrix.junit-version }}, Modular ${{ matrix.modular }} on ${{ matrix.os }}
     steps:
       - name: Check out repo
         uses: actions/checkout@v2
-        with:
-          # fetch unshallow to enable blame for Sonar
-          fetch-depth: 0
       - name: Set up java
         uses: actions/setup-java@v1
         with:
@@ -93,9 +93,19 @@ jobs:
         with:
           arguments: --refresh-dependencies -PmodularBuild=${{ matrix.modular }} -PjunitVersion=${{ matrix.junit-version }} --stacktrace --scan clean build
 
+  validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    name: Gradle Wrapper Validation
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+
   buildDone:
     name: buildOk
-    needs: build
+    needs: full-featured
     runs-on: ubuntu-latest
     steps:
       - name: buildOk
