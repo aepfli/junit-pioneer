@@ -15,6 +15,6 @@ jobs:
           commands: |
             merge-ready
           dispatch-type: workflow
-          issue-type: pullrequest
+          issue-type: pullrequests
           static-args: |
             actor=${{ github.actor }}
