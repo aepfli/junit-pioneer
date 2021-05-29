@@ -13,8 +13,15 @@ jobs:
           reactions: seen
           permission: maintain
           commands: |
-            merge-ready
+            build
           dispatch-type: workflow
           issue-type: pull-request
           static-args: |
             actor=${{ github.actor }}
+      - name: Edit comment with error message
+        if: steps.scd.outputs.error-message
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          body: |
+            > ${{ steps.scd.outputs.error-message }}
