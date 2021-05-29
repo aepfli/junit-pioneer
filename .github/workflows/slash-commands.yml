@@ -18,6 +18,7 @@ jobs:
           issue-type: pull-request
           static-args: |
             actor=${{ github.actor }}
+            ref=${{ github.sha }}
       - name: Edit comment with error message
         if: steps.scd.outputs.error-message
         uses: peter-evans/create-or-update-comment@v1
