@@ -7,11 +7,7 @@ on:
       - 'v**'
   pull_request:
     branches: '*'
-  workflow_dispatch:
-    inputs:
-      actor:
-        description: 'The user who executed the slash command'
-        required: true
+    types: [labeled, opened, synchronize, reopened]
 
 jobs:
   basic:
@@ -57,7 +53,7 @@ jobs:
       #   run: echo "sonar" #./gradlew jacocoTestReport sonarqube --stacktrace -i
 
   maintainer-action-missing:
-    if: github.event.pull_request
+    if: "!contains(github.event.pull_request.labels.*.name, 'merge-ready') && github.event.pull_request"
     runs-on: ubuntu-latest
     name: "Maintainer Action is Missing before Merge"
     needs: basic
@@ -67,7 +63,7 @@ jobs:
           exit 1
   
   full-featured:
-    if: "github.event.repository_dispatch.action == 'merge-ready-command' || !github.event.pull_request"
+    if: contains(github.event.pull_request.labels.*.name, 'merge-ready') || !github.event.pull_request
     needs: basic
     runs-on: ${{ matrix.os }}-latest
     timeout-minutes: 15
