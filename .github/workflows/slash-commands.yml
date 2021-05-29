@@ -9,5 +9,12 @@ jobs:
       - name: Slash Command Dispatch
         uses: peter-evans/slash-command-dispatch@v2
         with:
+          token: ${{ secrets.DISPATCH }}
+          reactions: seen
+          permission: maintain
           commands: |
             merge-ready
+          dispatch-type: workflow
+          issue-type: pullrequest
+          static-args: |
+            actor=${{ github.actor }}
