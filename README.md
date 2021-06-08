@@ -1,4 +1,4 @@
-# JUnit Pioneer -aepfli
+# JUnit Pioneer -aepfli2
 
 <img src="docs/project-logo.jpg" align="right" width="150px"/>
 
