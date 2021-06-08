@@ -24,12 +24,20 @@ group = "org.junit-pioneer"
 description = "JUnit 5 Extension Pack"
 
 val modularBuild : String by project;
+val experimentalJavaVersion : String? by project;
+val experimentalBuild: Boolean = experimentalJavaVersion?.isNotEmpty()?: false
 
 java {
-	if(modularBuild.toBoolean()) {
-		sourceCompatibility = JavaVersion.VERSION_11
+	if(experimentalBuild) {
+		toolchain {
+			languageVersion.set(JavaLanguageVersion.of(experimentalJavaVersion))
+		}
 	} else {
-		sourceCompatibility = JavaVersion.VERSION_1_8
+		if(modularBuild.toBoolean()) {
+			sourceCompatibility = JavaVersion.VERSION_11
+		} else {
+			sourceCompatibility = JavaVersion.VERSION_1_8
+		}
 	}
 	withJavadocJar()
 	withSourcesJar()
@@ -195,6 +203,10 @@ tasks {
 	}
 
 	test {
+		
+    	configure<JacocoTaskExtension> {
+       		isEnabled = !experimentalBuild
+		}
 		testLogging {
 			setExceptionFormat("full")
 		}
@@ -222,6 +234,7 @@ tasks {
 	}
 
 	jacocoTestReport {
+		enabled = !experimentalBuild
 		reports {
 			xml.isEnabled = true
 			xml.destination = file("${buildDir}/reports/jacoco/report.xml")
