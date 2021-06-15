@@ -128,10 +128,10 @@ jobs:
       - uses: LouisBrunner/checks-action@v1.1.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: Maintainer Action needed
-          status: in_progress
+          name: Maintainer Action required, but your PR looks great
+          conclusion: action_required
           output: |
-              {"summary": "A Maintainer needs to apply the `merge-ready` label, which will trigger a fully featured build"}
+              {"summary": "A Maintainer needs to apply the `merge-ready` label, which will trigger a fully featured build."}
   
   # Our full integration job, which will build for a matrix out of our supported
   # java versions, operating systems, modular or not, and of cource junit versions.
