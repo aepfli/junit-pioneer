@@ -30,6 +30,28 @@ on:
         default: "false"
 
 jobs:
+  maintainer-action-missing-inProgress:
+    if: "!contains(github.event.pull_request.labels.*.name, 'merge-ready') && github.event.pull_request"
+    runs-on: ubuntu-latest
+    name: "Maintainer Action is Missing before Merge2"
+    steps:
+      - uses: LouisBrunner/checks-action@v1.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Maintainer Action needed
+          status: in_progress
+          
+  maintainer-action-missing-neutral:
+    if: "!contains(github.event.pull_request.labels.*.name, 'merge-ready') && github.event.pull_request"
+    runs-on: ubuntu-latest
+    name: "Maintainer Action is Missing before Merge neutral"
+    steps:
+      - uses: LouisBrunner/checks-action@v1.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Maintainer Action needed
+          conclusion: neutral
+  
   # Basic Gradle Wrapper validation. This step is run first, due to security
   # concerns. Running our whole pipeline with gradle with a corrupt wrapper,
   # could expose our secrets, and we definitely want to prevent this.
