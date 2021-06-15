@@ -114,7 +114,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: "61ab2579215aa8a0024a2f9368fc1298fdecfd18"
         run: echo "sonar" # ./gradlew jacocoTestReport sonarqube --stacktrace -i
-
+  
+  # An Action that should signalize that we still need some mainter action, before
+  # we can merge an pull request. The Action needed is defined in the full-featured
+  # steps and this is just a reminder for us maintainer to prevent unintentional
+  # merges.
+  maintainer-action-missing:
+    if: "!contains(github.event.pull_request.labels.*.name, 'merge-ready') && github.event.pull_request"
+    runs-on: ubuntu-latest
+    name: "Maintainer Action is Missing before Merge"
+    needs: basic
+    steps:
+      - run: |
+          echo "A Maintainer will execute this build as soon as it is ready to merge. This action is *NOT* failing due to an error on your side, it is just precaution."
+          echo ::set-output name=status::cancelled
+  
   # Our full integration job, which will build for a matrix out of our supported
   # java versions, operating systems, modular or not, and of cource junit versions.
   # This build is executed on all tags and the default branch. Furthermore we will
@@ -151,19 +165,6 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           arguments: --refresh-dependencies -PmodularBuild=${{ matrix.modular }} -PjunitVersion=${{ matrix.junit-version }} --stacktrace --scan clean build
-
-  # An Action that should signalize that we still need some mainter action, before
-  # we can merge an pull request. The Action needed is defined in the full-featured
-  # steps and this is just a reminder for us maintainer to prevent unintentional
-  # merges.
-  merge-ready:
-    if: "!contains(github.event.pull_request.labels.*.name, 'merge-ready') && github.event.pull_request"
-    runs-on: ubuntu-latest
-    name: "A full feature build has run, and the build is merge ready."
-    needs: full-featured
-    steps:
-      - run: |
-          echo "A Maintainer will execute this build as soon as it is ready to merge."
 
   # We want to be up to date and know issues with future java versions as soon as possible.
   # Furthermore we also would love to see our build working with the latest gradle version.
