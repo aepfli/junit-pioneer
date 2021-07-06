@@ -1,4 +1,4 @@
-# JUnit Pioneer
+# JUnit Pioneer -aepfli
 
 <img src="docs/project-logo.jpg" align="right" width="150px"/>
 
@@ -142,3 +142,4 @@ The least we can do is to thank them and list some of their accomplishments here
 * [Benedikt Ritter](https://github.com/britter) contributed [the default locale and time zone extensions](https://junit-pioneer.org/docs/default-locale-timezone/) (#103 / #104)
 * [Christian Stein](https://github.com/sormuras) introduced Shipkit-based continuous delivery (#87) and build scans (#124 / #132)
 * [Marc Philipp](https://github.com/marcphilipp) helped get the project back on track and contributed [the `TempDirectory` extension](https://junit-pioneer.org/docs/temp-directory/) (#39 / #69)
+
