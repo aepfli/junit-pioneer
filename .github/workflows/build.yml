@@ -128,7 +128,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: Maintainer Action required, but your PR looks great
-          conclusion: action_required
+          status: queued
           action_url: "https://github.com/junit-pioneer/junit-pioneer/blob/main/CONTRIBUTING.md"
           output: |
               {"summary": "A maintainer needs to apply the `merge-ready` label, which will trigger a fully-featured build."}
