@@ -171,8 +171,22 @@ jobs:
         with:
           arguments: --refresh-dependencies -PmodularBuild=${{ matrix.modular }} -PjunitVersion=${{ matrix.junit-version }} --stacktrace --scan clean build
 
-  # We want to be up to date and know issues with future Java versions as soon as possible.
-  # Furthermore, we also would love to see our build working with the latest Gradle version.
+
+  # An Action that should signalize that we still need some mainter action, before
+  # we can merge an pull request. The Action needed is defined in the full-featured
+  # steps and this is just a reminder for us maintainer to prevent unintentional
+  # merges.
+  merge-ready:
+    if: "!contains(github.event.pull_request.labels.*.name, 'merge-ready') && github.event.pull_request"
+    runs-on: ubuntu-latest
+    name: "A full feature build has run, and the build is merge ready."
+    needs: full-featured
+    steps:
+      - run: |
+          echo "A Maintainer will execute this build as soon as it is ready to merge."
+
+  # We want to be up to date and know issues with future java versions as soon as possible.
+  # Furthermore we also would love to see our build working with the latest gradle version.
   # As those builds might fail, they are allowed to fail, and should not prevent merges.
   experimental:
     if: (contains(github.event.pull_request.labels.*.name, 'merge-ready') || !github.event.pull_request)
