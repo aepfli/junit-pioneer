@@ -30,8 +30,8 @@ on:
         default: "false"
 
 jobs:
-  # Basic Gradle Wrapper validation. This step is run first, due to security
-  # concerns. Running our whole pipeline with gradle with a corrupt wrapper,
+  # Basic Gradle wrapper validation. This step is run first, due to security
+  # concerns. Running our whole pipeline with Gradle with a corrupt wrapper,
   # could expose our secrets, and we definitely want to prevent this.
   validation:
     runs-on: ubuntu-latest
@@ -43,18 +43,17 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 
-  # Our basic build step as we want the Contributors to have a nice developer
-  # experience with little build time and a lot of information. Therefore we
-  # only build this on our default java version and for all operating systems
+  # Our basic build step as we want contributors to have a nice developer
+  # experience with little build time and sufficient feedback. Therefore, we
+  # only build this on our default Java version but for all operating systems
   # we are supporting. This allows for a fast execution and fast feedback, the
-  # extended tests are run later on some conditions.
+  # extended tests will run later under certain conditions.
   basic:
     runs-on: ${{ matrix.os }}-latest
     needs: validation
     timeout-minutes: 15
     strategy:
       matrix:
-        # test against latest update of each major Java version, as well as specific updates of LTS versions:
         java: [ 8 ]
         os: [ubuntu, macos, windows]
     name: with Java ${{ matrix.java }} on ${{ matrix.os }}
@@ -76,9 +75,9 @@ jobs:
         with:
           arguments: --refresh-dependencies --stacktrace --scan clean build
 
-  # Sonarcloud analysis does not support Java 8, hence that we need to execute the
-  # analysis separately with Java 11. It is acceptable because we are done to a few
-  # default builds for the contributors.
+  # SonarCloud analysis does not support Java 8, hence, we need to execute the
+  # analysis separately with Java 11. This is fine because we are done with the basic
+  # builds for the contributors.
   sonarcloud:
     runs-on: ubuntu-latest
     needs: validation
@@ -113,11 +112,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: "61ab2579215aa8a0024a2f9368fc1298fdecfd18"
-        run: ./gradlew jacocoTestReport sonarqube --stacktrace -i
+        run: ./gradlew -v # jacocoTestReport sonarqube --stacktrace -i
 
-  # An Action that should signalize that we still need some mainter action, before
-  # we can merge an pull request. The Action needed is defined in the full-featured
-  # steps and this is just a reminder for us maintainer to prevent unintentional
+  # An action that should signalize that we still need some mainter action, before
+  # we can merge a pull request. The action needed is defined in the full-featured
+  # steps and this is just a reminder for us maintainers to prevent unintentional
   # merges.
   maintainer-action-missing:
     if: "!contains(github.event.pull_request.labels.*.name, 'merge-ready') && github.event.pull_request"
@@ -125,14 +124,20 @@ jobs:
     name: "Maintainer Action is Missing before Merge"
     needs: basic
     steps:
-      - run: |
-          echo "A Maintainer will execute this build as soon as it is ready to merge. This action is *NOT* failing due to an error on your side, it is just precaution."
-          exit 1
+      - uses: LouisBrunner/checks-action@v1.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Maintainer Action required, but your PR looks great
+          status: queued
+          action_url: "https://github.com/junit-pioneer/junit-pioneer/blob/main/CONTRIBUTING.md"
+          output: |
+              {"summary": "A maintainer needs to apply the `merge-ready` label, which will trigger a fully-featured build."}
+ 
   
   # Our full integration job, which will build for a matrix out of our supported
-  # java versions, operating systems, modular or not, and of cource junit versions.
-  # This build is executed on all tags and the default branch. Furthermore we will
-  # also execute this for pullrequests with the label `merge-ready`.
+  # Java versions, operating systems, modular or not, and of cource JUnit versions.
+  # This build is executed on all tags and the default branch. Furthermore, we will
+  # also execute this for pull requests with the label `merge-ready`.
   full-featured:
     if: (contains(github.event.pull_request.labels.*.name, 'merge-ready') || !github.event.pull_request)
     needs: basic
@@ -165,6 +170,7 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           arguments: --refresh-dependencies -PmodularBuild=${{ matrix.modular }} -PjunitVersion=${{ matrix.junit-version }} --stacktrace --scan clean build
+
 
   # An Action that should signalize that we still need some mainter action, before
   # we can merge an pull request. The Action needed is defined in the full-featured
@@ -227,7 +233,7 @@ jobs:
         uses: eskatos/gradle-command-action@v1
         with:
           gradle-version: rc
-          arguments: --refresh-dependencies -PexperimentalJavaVersion=17 -PmodularBuild=${{ matrix.modular }} -PjunitVersion=${{ matrix.junit-version }} -Porg.gradle.java.installations.auto-download=false --stacktrace --scan clean build
+          arguments: --refresh-dependencies -PexperimentalJavaVersion=${{ env.EXPERIMENTAL_JAVA }} -PmodularBuild=${{ matrix.modular }} -PjunitVersion=${{ matrix.junit-version }} -Porg.gradle.java.installations.auto-download=false --stacktrace --scan clean build
 
   # Releasing will be only done, if there is a version defined and `releasing` is set to true.
   # If not this stage will be ignored.
@@ -241,7 +247,8 @@ jobs:
       - name: Check out repo
         uses: actions/checkout@v2
         with:
-          fetch-depth: '0'
+          # Sonar needs the whole git history for issue assignment
+          fetch-depth: 0
       - name: Set up java
         uses: actions/setup-java@v1
         with:
@@ -263,7 +270,7 @@ jobs:
           arguments: publishToSonatype closeAndReleaseSonatypeStagingRepository githubRelease
 
   # After our release, we also need to trigger an update for our website build.
-  updateWebsite:
+  update-website:
     runs-on: ubuntu-latest
     needs: release
     timeout-minutes: 15
@@ -275,4 +282,3 @@ jobs:
           token: ${{ secrets.GH_WRITE_TOKEN }}
           repository: junit-pioneer/junit-pioneer.github.io
           event-type: triggerSiteBuild
-
